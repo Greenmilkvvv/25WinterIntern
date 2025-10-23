@@ -80,7 +80,26 @@ def fill_report(src_df: pd.DataFrame, target_subjects: list) -> pd.DataFrame:
     # 如需导出 Excel/CSV 时留空，可直接使用
     return result
 
-def pdf_to_table(PDF_NAME, start_loc, end_loc,):
+def pdf_to_table(PDF_NAME: list, start_loc: list, end_loc: list) -> pd.DataFrame:
+    """
+    该函数依赖 pdfplumber 库，用于从 PDF 文件中提取表格数据。
+
+    参数
+    ----
+    PDF_NAME : str
+        PDF 文件名 / PDF 文件路径 两者都可以
+    start_loc : list[int, int]
+        起始页码和起始表格索引
+    end_loc : list[int, int]
+        结束页码和结束表格索引
+    ---
+
+    在财报中我们时常发现，有些表格是跨页的，所以需要用这个函数来提取跨页表格。
+    - start_loc 这个列表的第一个数字是起始页码（其并不是文件中标注的页码，而是真实的页码数的索引（从0开始）
+    - start_loc 这个数字表示该页中的表格索引（从0开始）。
+    比如在第10个页面中的第2个表格，那么start_loc就是[9, 2]
+    end_loc同理，只不过表示的是结束页码和结束表格索引。
+    """
     with pdfplumber.open(PDF_NAME) as pdf:
         df = []
         for i in range(start_loc[0], end_loc[0]+1):
