@@ -2,6 +2,7 @@
 
 import numpy as np
 import pandas as pd
+import pdfplumber
 
 # def fill_report(src_df: pd.DataFrame, target_subjects: list) -> pd.DataFrame:
 #     """
@@ -78,4 +79,17 @@ def fill_report(src_df: pd.DataFrame, target_subjects: list) -> pd.DataFrame:
     # 把缺失值保持为 NaN，但列仍保持对象类型（object）
     # 如需导出 Excel/CSV 时留空，可直接使用
     return result
+
+def pdf_to_table(PDF_NAME, start_loc, end_loc,):
+    with pdfplumber.open(PDF_NAME) as pdf:
+        df = []
+        for i in range(start_loc[0], end_loc[0]+1):
+            if i == start_loc[0]:
+                df.append(pd.DataFrame(pdf.pages[i].extract_tables()[start_loc[1]]))
+            elif i == end_loc[0]:
+                df.append(pd.DataFrame(pdf.pages[i].extract_tables()[end_loc[1]]))
+            else:
+                df.append(pd.DataFrame(pdf.pages[i].extract_tables()[0]))
+        df = pd.concat(df, axis=0)
+    return df.copy()
 
