@@ -89,15 +89,14 @@ def get_float(num: str) -> float:
 
 def make_table_num(df: pd.DataFrame) -> pd.DataFrame :
     """
-    在转录财报时遇见两方面数据问题
-    - 数值有千分位分隔符, 需要处理成一般的浮点数
+    在转录财报时遇见一个方面数据问题
     - 一些位置填写为 "-" , 需要处理成 NaN
     """
+    # 循环遍历表格 将 '-' 替换为 NaN
     for i in range(len(df)):
-        if df.iloc[i, 1] == '-':
-            df.iloc[i, 1] = np.nan
-        else:
-            df.iloc[i, 1] = get_float(df.iloc[i, 1])
+        for j in range(len(df.columns)):
+            if df.iloc[i, j] == '-':
+                df.iloc[i, j] = np.nan
     return df
 
 def pdf_to_table(PDF_NAME: list, start_loc: list, end_loc: list) -> pd.DataFrame:
