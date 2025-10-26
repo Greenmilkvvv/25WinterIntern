@@ -1,4 +1,4 @@
-# 用于记录在CCXI实习时用到的工具代码
+# 用于记录在这个机构实习时用到的工具代码
 
 import numpy as np
 import pandas as pd
@@ -99,7 +99,7 @@ def make_table_num(df: pd.DataFrame) -> pd.DataFrame :
                 df.iloc[i, j] = np.nan
     return df
 
-def pdf_to_table(PDF_NAME: list, start_loc: list, end_loc: list) -> pd.DataFrame:
+def pdf_to_table(PDF_NAME: str, start_loc: list, end_loc: list, drop_1row: bool = False) -> pd.DataFrame:
     """
     该函数依赖 pdfplumber 库,用于从 PDF 文件中提取表格数据. 
 
@@ -107,10 +107,15 @@ def pdf_to_table(PDF_NAME: list, start_loc: list, end_loc: list) -> pd.DataFrame
     ----
     PDF_NAME : str
     - PDF 文件名 / PDF 文件路径 两者都可以
+
     start_loc : list[int, int]
         起始页码和起始表格索引
+
     end_loc : list[int, int]
     - 结束页码和结束表格索引
+
+    drop_1row : bool
+        是否删除第一行,默认为 False
     ---
 
     在财报中我们时常发现,有些表格是跨页的,所以需要用这个函数来提取跨页表格. 
@@ -118,18 +123,24 @@ def pdf_to_table(PDF_NAME: list, start_loc: list, end_loc: list) -> pd.DataFrame
     - start_loc 这个数字表示该页中的表格索引(从0开始). 
     比如在第10个页面中的第2个表格,那么start_loc就是[9, 2]
     end_loc同理,只不过表示的是结束页码和结束表格索引. 
+
+    此外, 第一行经常只是对表格的说明,所以可以设置 drop_1row=True 来删除第一行.
     """
+
+    df = []
+    index_to_start = int(drop_1row)
+    
     with pdfplumber.open(PDF_NAME) as pdf:
-        df = []
         for i in range(start_loc[0], end_loc[0]+1):
             if i == start_loc[0]:
-                df.append(pd.DataFrame(pdf.pages[i].extract_tables()[start_loc[1]]))
+                df.append( pd.DataFrame(pdf.pages[i].extract_tables()[start_loc[1]] ) )
             elif i == end_loc[0]:
-                df.append(pd.DataFrame(pdf.pages[i].extract_tables()[end_loc[1]]))
+                df.append( pd.DataFrame(pdf.pages[i].extract_tables()[end_loc[1]][index_to_start:] ) )
             else:
-                df.append(pd.DataFrame(pdf.pages[i].extract_tables()[0]))
+                df.append( pd.DataFrame(pdf.pages[i].extract_tables()[0][index_to_start:] ) )
         df = pd.concat(df, axis=0)
-    return df.copy()
+
+    return df
 
 
 
