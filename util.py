@@ -144,3 +144,18 @@ def pdf_to_table(PDF_NAME: str, start_loc: list, end_loc: list, drop_1row: bool 
 
 
 
+def when_to_XingQuan(s: str, filter_rule: list) -> str : 
+    """
+    s: 所有的兑付日, 跨行字符串形式
+    filter: 用于挑选其中的行权日 如果需要第 19 , 39, 59 个行权日, 则 filter = [19, 39, 59] 即可
+    """
+    s = s.split('\n')
+    s = [ s[x-1] for x in filter_rule]
+    s = [ x[0:4] + '-' + x[4:6] + '-' + x[6:8] for x in s]
+
+    res = ';'.join(s)+';'
+    print(res)
+    # return res
+
+
+
