@@ -2,6 +2,7 @@
 
 import numpy as np
 import pandas as pd
+import datetime
 import pdfplumber
 
 # def fill_report(src_df: pd.DataFrame, target_subjects: list) -> pd.DataFrame:
@@ -144,12 +145,18 @@ def pdf_to_table(PDF_NAME: str, start_loc: list, end_loc: list, drop_1row: bool 
 
 
 
-def when_to_XingQuan(s: str, filter_rule: list) -> str : 
+# 下面两个函数用于确定行权日
+
+def dates_from_lst(s: list, filter_rule: list) -> str : 
     """
+    从 兑付日清单(跨行长字符串 或者 列表) 中筛选出需要的日期
+    ---
     s: 所有的兑付日, 跨行字符串形式
-    filter: 用于挑选其中的行权日 如果需要第 19 , 39, 59 个行权日, 则 filter = [19, 39, 59] 即可
+    filter: 用于挑选其中的行权日 如果需要第 19 , 39, 59 个行权日, 则 filter_rule = [19, 39, 59] 即可
     """
-    s = s.split('\n')
+    if isinstance(s, str):
+        s = s.strip().split('\n')
+    # s = s.strip().split('\n')
     s = [ s[x-1] for x in filter_rule]
     s = [ x[0:4] + '-' + x[4:6] + '-' + x[6:8] for x in s]
 
@@ -158,4 +165,46 @@ def when_to_XingQuan(s: str, filter_rule: list) -> str :
     # return res
 
 
+def dates_after_years(year: int, month: int, day: int, # 起息日
+                      cycle_years: int = 3, num_turns: int = 5, # 行权周期和次数
+                      In_Advance: bool = False) -> str: # 是否提前到上一个工作日
+    """
+    从起息日出发, 生成若干个行权日, 并以特定字符串形式返回. 
+    比如，初始起息日为 2025-11-11 每3年一个行权日; 然而如果当天是周末, 需要按照规则, 延后或者提前到下一个工作日!!!
+    最后按照工作场景需求整理成特定字符串形式返回.
+    ---
+    year: 起息日年份
+    month: 起息日月份
+    day: 起息日日期
+    cycle_years: 周期年数 (默认为3年行权一次)
+    num_turns: 行权次数 (默认为总共行权5次)
+    In_Advance: True 表示行权日提前到上一个工作日, False 表示行权日延后到下一个工作日 (默认为 False)
+    """
+
+    # 初始化
+    start = datetime.datetime(year, month, day) 
+    dates_to_XingQuan = []
+
+    # 循环生成行权日
+    for i in range(1, num_turns+1):
+        d = datetime.datetime( year + i*cycle_years , month , day ) # 周期之后的对应日
+
+        # 工作日判断
+        weekday = d.weekday()
+
+        if weekday == 5: # 如果是周六
+            if In_Advance: # 提前到上一个工作日
+                d = d - datetime.timedelta(days=1)
+            else: # 延后到下一个工作日
+                d = d + datetime.timedelta(days=2)
+
+        elif weekday == 6: # 如果是周日
+            if In_Advance: # 提前到上一个工作日
+                d = d - datetime.timedelta(days=2)
+            else: # 延后到下一个工作日
+                d = d + datetime.timedelta(days=1)
+
+        dates_to_XingQuan.append( d.strftime('%Y-%m-%d') ) # 添加到结果列表中
+
+    return ';'.join(dates_to_XingQuan)+';'
 
