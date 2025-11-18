@@ -166,7 +166,7 @@ def dates_from_lst(s: list, filter_rule: list) -> str :
 
 
 def dates_after_years(year: int, month: int, day: int, # 起息日
-                      cycle_years: int = 3, num_turns: int = 5, # 行权周期和次数
+                      filter_rule: list = [3,6,9,12,15], # 行权周期和次数
                       In_Advance: bool = False) -> str: # 是否提前到上一个工作日
     """
     从起息日出发, 生成若干个行权日, 并以特定字符串形式返回. 
@@ -176,18 +176,16 @@ def dates_after_years(year: int, month: int, day: int, # 起息日
     year: 起息日年份
     month: 起息日月份
     day: 起息日日期
-    cycle_years: 周期年数 (默认为3年行权一次)
-    num_turns: 行权次数 (默认为总共行权5次)
+    filter_rule: 第几个行权日,, 比如第 3, 6, 9, 12, 15 个行权日. 默认为 [3,6,9,12,15]
     In_Advance: True 表示行权日提前到上一个工作日, False 表示行权日延后到下一个工作日 (默认为 False)
     """
 
     # 初始化
-    start = datetime.datetime(year, month, day) 
     dates_to_XingQuan = []
 
     # 循环生成行权日
-    for i in range(1, num_turns+1):
-        d = datetime.datetime( year + i*cycle_years , month , day ) # 周期之后的对应日
+    for i in filter_rule:
+        d = datetime.datetime( year + i , month , day ) # 周期之后的对应日
 
         # 工作日判断
         weekday = d.weekday()
@@ -206,6 +204,6 @@ def dates_after_years(year: int, month: int, day: int, # 起息日
 
         dates_to_XingQuan.append( d.strftime('%Y-%m-%d') ) # 添加到结果列表中
 
-        print( ';'.join(dates_to_XingQuan)+';' )
+    print( ';'.join(dates_to_XingQuan)+';' )
     # return ';'.join(dates_to_XingQuan)+';'
 
