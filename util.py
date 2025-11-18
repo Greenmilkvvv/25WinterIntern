@@ -206,5 +206,6 @@ def dates_after_years(year: int, month: int, day: int, # 起息日
 
         dates_to_XingQuan.append( d.strftime('%Y-%m-%d') ) # 添加到结果列表中
 
-    return ';'.join(dates_to_XingQuan)+';'
+        print( ';'.join(dates_to_XingQuan)+';' )
+    # return ';'.join(dates_to_XingQuan)+';'
 
