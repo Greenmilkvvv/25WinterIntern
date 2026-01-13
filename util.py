@@ -287,8 +287,8 @@ def get_data(df, preprocess_profit_statement: bool = False):
 
     res = pd.DataFrame([x.strip().split(' ') for x in df.split('\n')])
 
-    if preprocess_profit_statement: return res
-    else: return preprocess_income_statement(res)
+    if preprocess_profit_statement: return preprocess_income_statement(res)
+    else: return res
 
 
 def get_target_subjects(lst_index):
