@@ -288,25 +288,7 @@ def get_data(df, preprocess_profit_statement: bool = False):
     res = pd.DataFrame([x.strip().split(' ') for x in df.split('\n')])
 
     if preprocess_profit_statement: return res
-    else: return ( 
-        res
-        .replace('（损失以“－”号填列）', '')
-        .replace('（净亏损以“－”号填列）', '')
-        .replace('（亏损总额以“－”号填列）', '')
-        .replace('减：所得税费用', '减：所得税')
-        .replace('一、', '')
-        .replace('二、', '')
-        .replace('三、', '')
-        .replace('四、', '')
-        .replace('五、', '')
-        .replace('六、', '')
-        .replace('七、', '')
-        .replace('1、', '')
-        .replace('2、', '')
-        .replace('(一)', '')
-        .replace('(二)', '')
-        .replace('加：其他收益', '其他收益')
-    )
+    else: return preprocess_income_statement(res)
 
 
 def get_target_subjects(lst_index):
@@ -415,6 +397,33 @@ def pdf_to_table(PDF_NAME: str, start_loc: list, end_loc: list, drop_1row: bool 
 
     return df
 
+
+
+def preprocess_income_statement(data: pd.DataFrame) -> pd.DataFrame:
+    """
+    对利润表进行预处理
+    """
+    res = data.copy()
+    res.iloc[:,0] = ( 
+        res.iloc[:,0]
+        .replace('（损失以“－”号填列）', '')
+        .replace('（净亏损以“－”号填列）', '')
+        .replace('（亏损总额以“－”号填列）', '')
+        .replace('减：所得税费用', '减：所得税')
+        .replace('一、', '')
+        .replace('二、', '')
+        .replace('三、', '')
+        .replace('四、', '')
+        .replace('五、', '')
+        .replace('六、', '')
+        .replace('七、', '')
+        .replace('1、', '')
+        .replace('2、', '')
+        .replace('(一)', '')
+        .replace('(二)', '')
+        .replace('加：其他收益', '其他收益')
+    )
+    return res
 
 
 # 下面两个函数用于确定行权日
