@@ -5,6 +5,249 @@ import pandas as pd
 import datetime
 import pdfplumber
 
+def get_sheet_rows(get_target_subjects: bool = False) -> dict:
+
+    """
+    默认报表的科目名称
+    """
+
+    rows = {} 
+
+    rows['资产负债表'] = """货币资金
+    以公允价值计量且其变动计入当期损益的金融资产
+    衍生金融资产
+    应收票据及应收账款
+    应收票据
+    应收账款
+    预付款项
+    应收利息
+    应收股利
+    其他应收款
+    存货
+    消耗性生物资产
+    合同资产
+    待摊费用
+    持有待售资产
+    一年内到期的非流动资产
+    结算备付金
+    拆出资金
+    应收保费
+    应收分保账款
+    应收分保合同准备金
+    买入返售金融资产
+    其他流动资产
+    流动资产差额(特殊报表科目)
+    流动资产差额(合计平衡项目)
+    流动资产合计
+    债权投资
+    其他债权投资
+    可供出售金融资产
+    其他权益工具投资
+    持有至到期投资
+    长期应收款
+    长期股权投资
+    投资性房地产
+    固定资产
+    固定资产清理
+    在建工程
+    工程物资
+    生产性生物资产
+    油气资产
+    无形资产
+    开发支出
+    商誉
+    长期待摊费用
+    递延所得税资产
+    发放贷款及垫款
+    其他非流动资产
+    非流动资产差额(特殊报表科目)
+    非流动资产差额(合计平衡项目)
+    非流动资产合计
+    资产差额(特殊报表科目)
+    资产差额(合计平衡项目)
+    资产总计
+    短期借款
+    以公允价值计量且其变动计入当期损益的金融负债
+    衍生金融负债
+    应付票据及应付账款
+    应付票据
+    应付账款
+    预收款项
+    合同负债
+    应付职工薪酬
+    应交税费
+    应付利息
+    应付股利
+    其他应付款
+    预提费用
+    持有待售负债
+    一年内到期的非流动负债
+    应付短期债券
+    其他流动负债
+    向中央银行借款
+    吸收存款及同业存放
+    拆入资金
+    卖出回购金融资产款
+    应付手续费及佣金
+    应付分保账款
+    保险合同准备金
+    代理买卖证券款
+    代理承销证券款
+    流动负债差额(特殊报表科目)
+    流动负债差额(合计平衡项目)
+    流动负债合计
+    长期借款
+    应付债券
+    长期应付款（合计）
+    长期应付款
+    专项应付款
+    长期应付职工薪酬
+    预计负债
+    递延所得税负债
+    递延收益
+    其他非流动负债
+    非流动负债差额(特殊报表科目)
+    非流动负债差额(合计平衡项目)
+    非流动负债合计
+    负债差额(特殊报表科目)
+    负债差额(合计平衡项目)
+    负债合计
+    实收资本
+    其他权益工具
+    其他权益工具：优先股
+    其他权益工具：永续债
+    资本公积
+    减：库存股
+    专项储备
+    盈余公积
+    其他综合收益
+    一般风险准备
+    外币报表折算差额
+    未确认的投资损失
+    未分配利润
+    所有者权益差额(特殊报表科目)
+    所有者权益差额(合计平衡项目)
+    归属于母公司所有者权益合计
+    少数股东权益
+    所有者权益合计
+    负债及所有者权益差额(特殊报表科目)
+    负债及所有者权益差额(合计平衡项目)
+    负债和所有者权益总计"""
+
+    rows['利润表'] = """营业总收入
+    其中：营业收入 
+    利息收入 
+    手续费及佣金收入 
+    已赚保费 
+    营业总成本
+    其中：营业成本 
+    利息支出 
+    手续费及佣金支出 
+    退保金 
+    赔付支出净额 
+    提取保险合同准备金净额 
+    保单红利支出 
+    分保费用 
+    税金及附加 
+    销售费用 
+    管理费用 
+    研发费用 
+    财务费用 
+        财务费用：利息费用 
+        财务费用：利息收入 
+    资产减值损失 
+    信用减值损失 
+    其他收益 
+    投资收益 
+    汇兑收益 
+    净敞口套期收益 
+    公允价值变动收益 
+    资产处置收益 
+    营业利润差额(特殊报表科目) 
+    营业利润差额(合计平衡项目) 
+    营业利润
+    加：营业外收入 
+    减：营业外支出 
+    利润总额差额(特殊报表科目) 
+    利润总额差额(合计平衡项目) 
+    利润总额
+    减：所得税 
+    净利润差额(特殊报表科目) 
+    净利润差额(合计平衡项目) 
+    净利润
+    归属于母公司所有者的净利润 
+    少数股东损益 
+    综合收益总额
+    减：归属于少数股东的综合收益总额
+    归属于母公司普通股东综合收益总额"""
+
+    rows['现金流量表'] = """销售商品、提供劳务收到的现金 
+    收到的税费返还 
+    收到其他与经营活动有关的现金 
+    客户存款和同业存放款项净增加额 
+    向中央银行借款净增加额 
+    向其他金融机构拆入资金净增加额 
+    收到原保险合同保费取得的现金 
+    收到再保险业务现金净额 
+    保户储金及投资款净增加额 
+    收取利息、手续费及佣金的现金 
+    拆入资金净增加额 
+    回购业务资金净增加额 
+    经营活动现金流入差额(特殊报表科目) 
+    经营活动现金流入差额(合计平衡项目) 
+    经营活动现金流入小计 
+    购买商品、接受劳务支付的现金
+    支付给职工以及为职工支付的现金
+    支付的各项税费
+    支付其他与经营活动有关的现金
+    客户贷款及垫款净增加额
+    存放央行和同业款项净增加额
+    支付原保险合同赔付款项的现金
+    支付利息、手续费及佣金的现金
+    支付保单红利的现金
+    经营活动现金流出差额(特殊报表科目)
+    经营活动现金流出差额(合计平衡项目)
+    经营活动现金流出小计 
+    经营活动产生的现金流量净额 
+    收回投资收到的现金
+    取得投资收益收到的现金
+    处置固定资产、无形资产和其他长期资产收回的现金净额
+    处置子公司及其他营业单位收到的现金净额
+    收到其他与投资活动有关的现金
+    投资活动现金流入差额(特殊报表科目)
+    投资活动现金流入差额(合计平衡项目)
+    投资活动现金流入小计 
+    购建固定资产、无形资产和其他长期资产支付的现金 
+    投资支付的现金 
+    质押贷款净增加额 
+    取得子公司及其他营业单位支付的现金净额 
+    支付其他与投资活动有关的现金 
+    投资活动现金流出差额(特殊报表科目) 
+    投资活动现金流出差额(合计平衡项目) 
+    投资活动现金流出小计 
+    投资活动产生的现金流量净额 
+    吸收投资收到的现金 
+    取得借款收到的现金 
+    发行债券收到的现金 
+    收到其他与筹资活动有关的现金 
+    筹资活动现金流入差额(特殊报表科目) 
+    筹资活动现金流入差额(合计平衡项目) 
+    筹资活动现金流入小计 
+    偿还债务支付的现金 
+    分配股利、利润或偿付利息支付的现金 
+    支付其他与筹资活动有关的现金 
+    筹资活动现金流出差额(特殊报表科目) 
+    筹资活动现金流出差额(合计平衡项目) 
+    筹资活动现金流出小计 
+    筹资活动产生的现金流量净额 
+    汇率变动对现金及现金等价物的影响 
+    现金及现金等价物净增加额 
+    期初现金及现金等价物余额 
+    期末现金及现金等价物余额"""
+
+    if get_target_subjects: return [get_target_subjects(x) for x in rows]
+    else: return rows
+
 # def fill_report(src_df: pd.DataFrame, target_subjects: list) -> pd.DataFrame:
 #     """
 #     把「短报表」里的数值,按科目名称填到「长报表」对应科目行中；若科目不存在于短报表,则数值留空(""). 
@@ -30,11 +273,40 @@ import pdfplumber
 #     return pd.DataFrame({'科目': target_subjects, '数值': filled_values}, dtype=str)
 
 
-def get_data(df): 
+def get_data(df, preprocess_profit_statement: bool = False): 
     """
-    把我从各种材料(主要是pdf比较难搞)上面黏贴过来的字符串改写成 DataFrame
+    把我从各种材料(主要是pdf比较难搞)上面粘过来的字符串改写成 DataFrame
+    ---
+    参数
+    ----
+    df : str
+        我从pdf上黏贴过来的字符串
+    preprocess_profit_statement : bool
+        是否对利润表进行预处理
     """
-    return pd.DataFrame([x.strip().split(' ') for x in df.split('\n')])
+
+    res = pd.DataFrame([x.strip().split(' ') for x in df.split('\n')])
+
+    if preprocess_profit_statement: return res
+    else: return ( 
+        res
+        .replace('（损失以“－”号填列）', '')
+        .replace('（净亏损以“－”号填列）', '')
+        .replace('（亏损总额以“－”号填列）', '')
+        .replace('减：所得税费用', '减：所得税')
+        .replace('一、', '')
+        .replace('二、', '')
+        .replace('三、', '')
+        .replace('四、', '')
+        .replace('五、', '')
+        .replace('六、', '')
+        .replace('七、', '')
+        .replace('1、', '')
+        .replace('2、', '')
+        .replace('(一)', '')
+        .replace('(二)', '')
+        .replace('加：其他收益', '其他收益')
+    )
 
 
 def get_target_subjects(lst_index):
@@ -207,3 +479,52 @@ def dates_after_years(year: int, month: int, day: int, # 起息日
     print( ';'.join(dates_to_XingQuan)+';' )
     # return ';'.join(dates_to_XingQuan)+';'
 
+
+def delay(date:datetime.datetime) -> datetime.datetime: 
+    """若不是工作日 则往后推到第一个工作日"""
+    if date.weekday() == 5:
+        return date + datetime.timedelta(days=2)
+    elif date.weekday() == 6:
+        return date + datetime.timedelta(days=1)
+    else:
+        return date
+    
+
+def workday_earlier(date:datetime.datetime, earlier:int = 10) -> datetime.datetime:
+    """从特定日期出发，找到之前的第 earlier 个工作日"""
+    count = 0
+    while count < earlier:
+        date -= datetime.timedelta(days=1)
+        if date.weekday() < 5:
+            count += 1
+    return date
+
+
+def take_workday(year, month, loc=20)->datetime.datetime:
+    """计算某月第 loc 个工作日"""
+    date = datetime.datetime(year, month, 1)
+    count = 0 if date.weekday() >= 5 else 1 
+    while count < loc:
+        date += datetime.timedelta(days=1)
+        if date.weekday() < 5:
+            count += 1
+    return date
+
+
+def find_nth_workday(start_date: datetime.datetime, n: int, forward: bool = True) -> datetime.datetime:
+    """从特定日期出发，找到之后/之前的第 n 个工作日"""
+    count = 0
+    while count < n:
+        if forward:
+            start_date += datetime.timedelta(days=1)
+        else:
+            start_date -= datetime.timedelta(days=1)
+        if start_date.weekday() < 5:
+            count += 1
+    return start_date
+
+def display_dates(dates_lst: list[datetime.datetime]) -> None:
+    """按照公司的需求打印"""
+
+    res = [d.strftime("%Y-%m-%d") for d in dates_lst]
+    print(";".join(res) + ";")
