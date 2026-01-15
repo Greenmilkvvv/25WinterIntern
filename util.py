@@ -589,6 +589,7 @@ def find_nth_workday(start_date: datetime.datetime, n: int, forward: bool = True
             count += 1
     return start_date
 
+
 def display_dates(dates_lst: list[datetime.datetime]) -> None:
     """按照公司的需求打印"""
 
