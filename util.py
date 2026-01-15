@@ -273,7 +273,7 @@ def get_sheet_rows(get_target_subjects: bool = False) -> dict:
 #     return pd.DataFrame({'科目': target_subjects, '数值': filled_values}, dtype=str)
 
 
-def get_data(df, preprocess_income_statement: bool = False): 
+def get_data(df, preprocess: bool = False): 
     """
     把我从各种材料(主要是pdf比较难搞)上面粘过来的字符串改写成 DataFrame
     ---
@@ -287,7 +287,7 @@ def get_data(df, preprocess_income_statement: bool = False):
 
     res = pd.DataFrame([x.strip().split(' ') for x in df.split('\n')])
 
-    if preprocess_income_statement: return preprocess_income_statement(res)
+    if preprocess: return sheet_preprocess(res)
     else: return res
 
 
@@ -399,7 +399,7 @@ def pdf_to_table(PDF_NAME: str, start_loc: list, end_loc: list, drop_1row: bool 
 
 
 
-def preprocess_income_statement(data: pd.DataFrame) -> pd.DataFrame:
+def sheet_preprocess(data: pd.DataFrame) -> pd.DataFrame:
     """
     对科目列进行预处理的流程
     或许 已经尽善尽美了吧
