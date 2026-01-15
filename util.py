@@ -10,6 +10,9 @@ import datetime
 import pdfplumber
 
 
+#-------------------------------------------------------------------#
+# 1. 财报录入
+
 def get_sheet_rows(get_target_subjects: bool = False) -> dict:
 
     """
@@ -478,7 +481,9 @@ def sheet_preprocess(data: pd.DataFrame) -> pd.DataFrame:
     return res
 
 
-# 下面两个函数用于确定行权日
+
+#-------------------------------------------------------------------#
+# 2. 行权日计算相关
 
 def dates_from_lst(s: list, filter_rule: list) -> str : 
     """
