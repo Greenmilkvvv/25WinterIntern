@@ -401,7 +401,8 @@ def pdf_to_table(PDF_NAME: str, start_loc: list, end_loc: list, drop_1row: bool 
 
 def preprocess_income_statement(data: pd.DataFrame) -> pd.DataFrame:
     """
-    对表等进行预处理
+    对科目列进行预处理的流程
+    或许 已经尽善尽美了吧
     """
     res = data.copy()
     res.iloc[:,0] = ( 
