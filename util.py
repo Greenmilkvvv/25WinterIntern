@@ -593,7 +593,6 @@ def find_nth_workday(start_date: datetime.datetime, n: int, forward: bool = True
 
 def display_dates(dates_lst: list[datetime.datetime]) -> None:
     """按照公司的需求打印"""
-
     res = [d.strftime("%Y-%m-%d") for d in dates_lst]
     print(";".join(res) + ";")
 
