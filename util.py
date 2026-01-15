@@ -584,3 +584,8 @@ def display_dates(dates_lst: list[datetime.datetime]) -> None:
 
     res = [d.strftime("%Y-%m-%d") for d in dates_lst]
     print(";".join(res) + ";")
+
+"""
+Now it's time to leave.
+I'll miss here.
+"""
