@@ -401,15 +401,27 @@ def pdf_to_table(PDF_NAME: str, start_loc: list, end_loc: list, drop_1row: bool 
 
 def preprocess_income_statement(data: pd.DataFrame) -> pd.DataFrame:
     """
-    对利润表进行预处理
+    对表等进行预处理
     """
     res = data.copy()
     res.iloc[:,0] = ( 
         res.iloc[:,0]
+        .str.strip()
+        .str.replace(' ', '')
+        .str.replace('\n', '')
+        .str.replace('\t', '')
+        .str.replace('（或股本）', '')
+        .str.replace('（或股东权益）', '')
         .str.replace('（损失以“－”号填列）', '')
+        .str.replace('（亏损以“－”号填列）', '')
         .str.replace('（净亏损以“－”号填列）', '')
         .str.replace('（亏损总额以“－”号填列）', '')
-        .str.replace('减：所得税费用', '减：所得税')
+        .str.replace('其中：利息费用', '财务费用：利息费用')
+        .str.replace('利息收入', '财务费用：利息收入')
+        .str.replace('所得税费用', '所得税')
+        .str.replace('加：其他收益', '其他收益')
+        .str.replace('（损失以“-”号填列）', '')
+        .str.replace('（亏损以“-”号填列）', '')
         .str.replace('一、', '')
         .str.replace('二、', '')
         .str.replace('三、', '')
@@ -417,11 +429,10 @@ def preprocess_income_statement(data: pd.DataFrame) -> pd.DataFrame:
         .str.replace('五、', '')
         .str.replace('六、', '')
         .str.replace('七、', '')
-        .str.replace('1、', '')
-        .str.replace('2、', '')
-        .str.replace('(一)', '')
-        .str.replace('(二)', '')
-        .str.replace('加：其他收益', '其他收益')
+        .str.replace('八、', '')
+        .str.replace('九、', '')
+        .str.replace('十、', '')
+        .str.replace('加：期初现金及现金等价物余额', '期初现金及现金等价物余额')
     )
     return res
 
