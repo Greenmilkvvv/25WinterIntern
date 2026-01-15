@@ -1,9 +1,14 @@
+#-------------------------------------------------------------------#
+# GitHub Repository: https://github.com/Greenmilkvvv/25WinterIntern #
+#-------------------------------------------------------------------#
+
 # 用于记录在这个机构实习时用到的工具代码
 
 import numpy as np
 import pandas as pd
 import datetime
 import pdfplumber
+
 
 def get_sheet_rows(get_target_subjects: bool = False) -> dict:
 
@@ -585,7 +590,14 @@ def display_dates(dates_lst: list[datetime.datetime]) -> None:
     res = [d.strftime("%Y-%m-%d") for d in dates_lst]
     print(";".join(res) + ";")
 
+
+#-------------------------------------------------------------------#
+# GitHub Repository: https://github.com/Greenmilkvvv/25WinterIntern #
+#-------------------------------------------------------------------#
+
+
 """
 Now it's time to leave.
-I'll miss here.
+Thank you all for your patientce. 
+I'll miss here. :)
 """
