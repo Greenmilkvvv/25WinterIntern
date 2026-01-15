@@ -515,7 +515,7 @@ def dates_after_years(year: int, month: int, day: int, # 起息日
     year: 起息日年份
     month: 起息日月份
     day: 起息日日期
-    filter_rule: 第几个行权日,, 比如第 3, 6, 9, 12, 15 个行权日. 默认为 [3,6,9,12,15]
+    filter_rule: 第几个行权日, 比如第 3, 6, 9, 12, 15 个行权日. 默认为 [3,6,9,12,15]
     In_Advance: True 表示行权日提前到上一个工作日, False 表示行权日延后到下一个工作日 (默认为 False)
     """
 
